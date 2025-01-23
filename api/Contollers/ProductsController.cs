@@ -9,7 +9,7 @@ using api.Models.Dto.Product;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
-namespace api.Contollers
+namespace api.Controllers
 {
 
     [Route("api/[controller]")]
