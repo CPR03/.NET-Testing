@@ -6,8 +6,10 @@ using api.Data;
 using api.Models;
 using api.Models.Dto;
 using api.Models.Dto.Product;
+using api.Repository.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -17,31 +19,31 @@ namespace api.Controllers
     public class ProductsController : ControllerBase
     {
 
-        private readonly ApplicationDBContext _context;
         private readonly IMapper _mapper;
+        private readonly IProductRepository _productRepository;
 
-        public ProductsController(ApplicationDBContext context, IMapper mapper)
+        public ProductsController(IMapper mapper, IProductRepository productRepository)
         {
-            _context = context;
             _mapper = mapper;
+            _productRepository = productRepository;
         }
 
-        // Get all products
+        //ANCHOR Get all products
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var products = _context.Products.ToList();
+            var products = await _productRepository.GetAllAsync();
 
             // Mapping the products to ProductDto
             var productDtos = _mapper.Map<List<ProductDto>>(products);
             return Ok(productDtos);
         }
 
-        // Get product by id
+        //ANCHOR Get product by id
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var products = _mapper.Map<ProductDto>(_context.Products.Find(id));
+            var products = await _productRepository.GetByIdAsync(id);
 
             if (products == null)
             {
@@ -51,60 +53,44 @@ namespace api.Controllers
             return Ok(products);
         }
 
-        // Create a new product
+        //ANCHOR Create a new product
         [HttpPost]
-        public IActionResult Create([FromBody] CreateProductDto createProductDto)
+        public async Task<IActionResult> Create([FromBody] CreateProductDto createProductDto)
         {
-            // createProductDto is what the user will see and interact with
-            // productModel is what will be saved to the database with proper Product model
-            var productModel = _mapper.Map<Product>(createProductDto);
+            var product = await _productRepository.CreateAsync(createProductDto);
 
-            _context.Products.Add(productModel);
-            _context.SaveChanges();
-
-            // Sample usage for mapping the productModel to ProductDto once again.
-            var productDto = _mapper.Map<ProductDto>(productModel);
-            return CreatedAtAction(nameof(GetById), new { id = productModel.Id }, productDto);
+            // Mapping the product to ProductDto
+            var productDto = _mapper.Map<ProductDto>(product);
+            return CreatedAtAction(nameof(GetById), new { id = product.Id }, productDto);
         }
 
-        // Delete a product
+        //ANCHOR Delete a product
         [HttpDelete("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var product = _context.Products.Find(id);
+            var product = await _productRepository.DeleteAsync(id);
 
             if (product == null)
             {
                 return NotFound("Product not found");
             }
 
-            _context.Products.Remove(product);
-            _context.SaveChanges();
-
-            return Ok("Product deleted");
+            return NoContent();
         }
 
-        // Update a product
+        //ANCHOR Update a product
         [HttpPut("{id}")]
-        public IActionResult Update([FromRoute] int id, [FromBody] UpdateProductDto updateProductDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateProductDto updateProductDto)
         {
-            var existingProduct = _context.Products.Find(id);
+            var productToUpdate = await _productRepository.UpdateAsync(id, updateProductDto);
 
             // Product not found
-            if (existingProduct == null)
+            if (productToUpdate == null)
             {
                 return NotFound("Product not found");
             }
 
-            // Map the DTO to the existing entity
-            _mapper.Map(updateProductDto, existingProduct);
-
-            _context.Products.Update(existingProduct);
-            _context.SaveChanges();
-
-            // Return updated product
-            var productDto = _mapper.Map<ProductDto>(existingProduct);
-            return Ok(productDto);
+            return Ok(productToUpdate);
         }
     }
 }

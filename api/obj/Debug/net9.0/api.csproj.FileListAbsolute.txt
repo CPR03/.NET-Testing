@@ -157,3 +157,4 @@ C:\Development\.NET Development\.NET Testing\api\bin\Debug\net9.0\Swashbuckle.As
 C:\Development\.NET Development\.NET Testing\api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Development\.NET Development\.NET Testing\api\bin\Debug\net9.0\AutoMapper.dll
 C:\Development\.NET Development\.NET Testing\api\bin\Debug\net9.0\AutoMapper.Extensions.ExpressionMapping.dll
+C:\Development\.NET Development\.NET Testing\api\obj\Debug\net9.0\api.sourcelink.json
