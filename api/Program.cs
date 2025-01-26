@@ -25,6 +25,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 
 //ANCHOR Repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 var app = builder.Build();
 
