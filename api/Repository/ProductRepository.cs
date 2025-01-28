@@ -23,7 +23,7 @@ namespace api.Repository
             _mapper = mapper;
         }
 
-        //ANCHOR Get all products including customers
+        //ANCHOR Get all products including customers 
         public async Task<List<Product>> GetAllAsync()
         {
             return await _context.Products
