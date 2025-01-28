@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Models.Dto.Customer;
 
 namespace api.Models.Dto
 {   
@@ -17,5 +18,8 @@ namespace api.Models.Dto
 
         // Product Description
         public string Description { get; set; } = string.Empty;
+
+        // Customers List
+        public List<CustomerDto> Customers { get; set; } = new List<CustomerDto>();
     }
 }

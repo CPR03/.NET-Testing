@@ -49,7 +49,7 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomerDto createCustomerDto)
         {
-            var customerToCreate = await _customerRepo.CreateCustomer(createCustomerDto);
+            var customerToCreate = await _customerRepo.CreateCustomer(createCustomerDto.ProductId, createCustomerDto);
             var customerModel = _mapper.Map<Customer>(customerToCreate);
 
             return CreatedAtAction(nameof(GetCustomerById), new { id = customerModel.Id }, customerToCreate);
@@ -59,7 +59,7 @@ namespace api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCustomer([FromRoute] int id, [FromBody] UpdateCustomerDto updateCustomerDto)
         {
-            var customerToUpdate = await _customerRepo.UpdateCustomer(id, updateCustomerDto);
+            var customerToUpdate = await _customerRepo.UpdateCustomer(id, updateCustomerDto, updateCustomerDto.ProductId);
 
             if (customerToUpdate == null)
             {

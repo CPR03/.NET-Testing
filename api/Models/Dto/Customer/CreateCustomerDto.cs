@@ -13,5 +13,7 @@ namespace api.Models.Dto.Customer
 
         [Required]
         public string Email { get; set; } = string.Empty;
+
+        public int? ProductId {get; set;}
     }
 }

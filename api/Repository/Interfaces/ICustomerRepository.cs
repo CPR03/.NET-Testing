@@ -12,8 +12,8 @@ namespace api.Repository.Interfaces
         Task<List<CustomerDto>> GetAllAsync();
         Task<CustomerDto> GetByIdAsync(int id);
 
-        Task<CustomerDto> CreateCustomer(CreateCustomerDto createCustomerDto);
-        Task<UpdateCustomerDto?> UpdateCustomer(int id, UpdateCustomerDto updateCustomerDto);
+        Task<CustomerDto> CreateCustomer(int? productId, CreateCustomerDto createCustomerDto);
+        Task<UpdateCustomerDto?> UpdateCustomer(int id, UpdateCustomerDto updateCustomerDto, int? productId);
         Task<CustomerDto?> DeleteCustomer(int id);
     }
 }

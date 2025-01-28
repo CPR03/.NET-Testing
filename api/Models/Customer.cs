@@ -14,5 +14,13 @@ namespace api.Models
 
         // Customer Email
         public string Email { get; set; } = string.Empty;
+
+
+        // ANCHOR Relationships
+        // Product ID
+        public int? ProductId { get; set; }
+
+        // Product
+        public Product? Product { get; set; }
     }
 }

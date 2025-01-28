@@ -40,9 +40,20 @@ namespace api.Repository
         }
 
         // ANCHOR Create customer
-        public async Task<CustomerDto> CreateCustomer(CreateCustomerDto createCustomerDto)
+        public async Task<CustomerDto> CreateCustomer(int? productId, CreateCustomerDto createCustomerDto)
         {
             var customerModel = _mapper.Map<Customer>(createCustomerDto);
+
+            if (productId.HasValue)
+            {
+                var product = await _context.Products.FindAsync(productId);
+
+                if (product != null)
+                {
+                    customerModel.ProductId = productId;
+                    customerModel.Product = product;
+                }
+            }
 
             await _context.Customers.AddAsync(customerModel);
             await _context.SaveChangesAsync();
@@ -53,13 +64,29 @@ namespace api.Repository
         }
 
         // ANCHOR Update Customer
-        public async Task<UpdateCustomerDto?> UpdateCustomer(int id, UpdateCustomerDto updateCustomerDto)
+        public async Task<UpdateCustomerDto?> UpdateCustomer(int id, UpdateCustomerDto updateCustomerDto, int? productId)
         {
             var customerToUpdate = await _context.Customers.FindAsync(id);
 
             if (customerToUpdate == null)
             {
                 return null;
+            }
+
+            if (productId.HasValue)
+            {
+                var product = await _context.Products.FindAsync(productId);
+
+                if (product != null)
+                {
+                    customerToUpdate.ProductId = productId;
+                    customerToUpdate.Product = product;
+                }
+            }
+            else
+            {
+                customerToUpdate.ProductId = null;
+                customerToUpdate.Product = null;
             }
 
             _mapper.Map(updateCustomerDto, customerToUpdate);

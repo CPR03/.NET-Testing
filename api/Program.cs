@@ -18,9 +18,16 @@ builder.Services.AddSwaggerGen();
 // Automapper
 builder.Services.AddAutoMapper(typeof(Program));
 
+// ANCHOR Database connection
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+// ANCHOR Include() method
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 
 //ANCHOR Repositories

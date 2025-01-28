@@ -23,17 +23,22 @@ namespace api.Repository
             _mapper = mapper;
         }
 
-        //ANCHOR Get all products
+        //ANCHOR Get all products including customers
         public async Task<List<Product>> GetAllAsync()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products
+                .Include(p => p.Customers)
+                .ToListAsync();
         }
 
         //ANCHOR Get product by id
         public async Task<ProductDto?> GetByIdAsync(int id)
         {
-            var product = _mapper.Map<ProductDto>(await _context.Products.FindAsync(id));
-            return product == null ? null : product;
+            var product = await _context.Products
+                .Include(p => p.Customers)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            return product == null ? null : _mapper.Map<ProductDto>(product);
         }
 
         //ANCHOR Create a new product
